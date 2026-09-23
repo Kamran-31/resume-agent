@@ -1,4 +1,4 @@
-# AI Resume Review Agent (CrewAI + Streamlit + Groq)
+# AI Resume Review Agent 
 
 A single-agent recruitment audit application that benchmarks candidate resumes against job descriptions without inventing details or hallucinating qualifications.
 
