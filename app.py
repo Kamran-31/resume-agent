@@ -1,5 +1,13 @@
-import io
+import subprocess
 import sys
+
+try:
+    import pkg_resources
+except ImportError:
+    subprocess.check_call([sys.executable, "-m", "pip", "install", "setuptools"])
+    import pkg_resources
+
+import io
 import streamlit as st
 from pypdf import PdfReader
 from crewai import Agent, Task, Crew, LLM
