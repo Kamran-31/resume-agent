@@ -1,16 +1,30 @@
-import subprocess
 import sys
+import types
 
+# Compatibility shim: Mock pkg_resources for CrewAI telemetry on minimal cloud environments
 try:
     import pkg_resources
 except ImportError:
-    subprocess.check_call([sys.executable, "-m", "pip", "install", "setuptools"])
-    import pkg_resources
+    class _MockRequirement:
+        @staticmethod
+        def parse(s):
+            return s
+
+    mock_pkg = types.ModuleType("pkg_resources")
+    mock_pkg.Requirement = _MockRequirement
+    mock_pkg.get_distribution = lambda x: types.SimpleNamespace(version="0.80.0")
+    mock_pkg.working_set = []
+    sys.modules["pkg_resources"] = mock_pkg
 
 import io
 import streamlit as st
 from pypdf import PdfReader
 from crewai import Agent, Task, Crew, LLM
+
+# Disable CrewAI telemetry completely to avoid background network/package lookups
+import os
+os.environ["OTEL_SDK_DISABLED"] = "true"
+os.environ["CREWAI_TELEMETRY_OPT_OUT"] = "true"
 
 # ---------------------------------------------------------
 # Page Configuration & Emerald / Violet Custom Theme Styling
